@@ -95,8 +95,22 @@ int main(void){
 	IplImage* input = cvLoadImage(fileName, 1);
 	IplImage* output = cvCreateImage(cvGetSize(input), IPL_DEPTH_8U, 3);
 
-	cv_ColorExtraction(input, output, CV_BGR2HSV, 170, 10, 80, 255, 0, 255);
-
+	for(int y=0; y<input->height; y++){
+		for(int x=0; x<input->width; x++){
+			uchar b = input->imageData[input->widthStep * y + x*3];
+			uchar g = input->imageData[input->widthStep * y + x*3 + 1];
+			uchar r = input->imageData[input->widthStep * y + x*3 + 2];
+			if(r>20 && r>b*2 && r>g*2 ){
+				output->imageData[input->widthStep * y + x*3] = 255;
+				output->imageData[input->widthStep * y + x*3 + 1] = 255;
+				output->imageData[input->widthStep * y + x*3 + 2] = 255;
+			}else{
+				output->imageData[input->widthStep * y + x*3] = 0;
+				output->imageData[input->widthStep * y + x*3 + 1] = 0;
+				output->imageData[input->widthStep * y + x*3 + 2] = 0;
+			}
+		}
+	}
 	cvNamedWindow("input", CV_WINDOW_AUTOSIZE);
 	cvShowImage("input", input);
 
